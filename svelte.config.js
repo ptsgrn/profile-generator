@@ -6,7 +6,10 @@ const dev = process.argv.includes('dev');
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	kit: {
-		adapter: adapter(),
+		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
+		}),
 		paths: {
 			base: dev ? '' : process.env.BASE_PATH
 		}
