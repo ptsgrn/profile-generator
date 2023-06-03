@@ -9,6 +9,7 @@
 	import { themeChange } from 'theme-change';
 
 	let WebFont: typeof WF;
+
 	onMount(() => {
 		themeChange(false);
 		import('webfontloader')
@@ -23,6 +24,7 @@
 	let profileBgColor = '#ff0000';
 	let profileTextColor = '#ffffff';
 	let profileFontFamily = 'Inter';
+	let profileFontSize = 100;
 
 	const bgPreset = [
 		'#ffffff',
@@ -103,22 +105,31 @@
 				console.info({ fontsStatus });
 			},
 			fontactive(familyName, fvd) {
-				fontsStatus = [...fontsStatus, {
-					status: 'active',
-					name: familyName
-				}]
+				fontsStatus = [
+					...fontsStatus,
+					{
+						status: 'active',
+						name: familyName
+					}
+				];
 			},
 			fontinactive(familyName, fvd) {
-				fontsStatus = [...fontsStatus, {
-					status: 'inactive',
-					name: familyName
-				}]
+				fontsStatus = [
+					...fontsStatus,
+					{
+						status: 'inactive',
+						name: familyName
+					}
+				];
 			},
 			fontloading(familyName, fvd) {
-				fontsStatus = [...fontsStatus, {
-					status: 'loading',
-					name: familyName
-				}]
+				fontsStatus = [
+					...fontsStatus,
+					{
+						status: 'loading',
+						name: familyName
+					}
+				];
 			}
 		});
 	}
@@ -134,10 +145,25 @@
 			download(dataUrl, filenamify(parent.innerText, { replacement: '-' }));
 		});
 	}
+
+	const availableThemes = [
+		'light',
+		'dark',
+		'cyberpunk',
+		'aqua',
+		'forest',
+		'wireframe',
+		'night',
+		'winter'
+	];
 </script>
 
+<svelte:head>
+	<title>Simple Text Profile Creator</title>
+</svelte:head>
+
 <main class="m-5 flex flex-col">
-	<div class="flex justify-center max-w-96 max-h-96 text-center relative">
+	<div class="flex justify-center max-w-96 max-h-96 text-center sticky">
 		<div
 			class="absolute w-full h-full border-[2px] border-dashed border-white/40 max-w-xs max-h-xs z-10 rounded-full"
 		/>
@@ -156,10 +182,10 @@
 				use:textfit={{
 					parent,
 					mode: 'multi',
-					autoResize: true
 				}}
+				style:font-size={`${profileFontSize}px`}
 			>
-				กลุ่ม 1
+				Hello :)
 			</div>
 		</div>
 	</div>
@@ -171,7 +197,13 @@
 			Save as JPEG</button
 		>
 	</div>
-	<div class="p-8 flex flex-col justify-center content-center items-center object-center">
+	<section class="m-auto p-8 flex flex-col max-w-md justify-center items-center object-center">
+		 <h2>Font size: {profileFontSize}px</h2>
+		<input type="range" class="range range-accent range-sm" bind:value={profileFontSize} min={20} max={200}/>
+	</section>
+	<div
+		class="p-8 flex flex-col justify-center content-center items-center object-center md:flex md:flex-row md:flex-wrap"
+	>
 		<section class="text-center max-w-lg">
 			<h2>Background Color</h2>
 			<code>{profileBgColor}</code>
@@ -246,29 +278,36 @@
 					<option value="Public Sans" />
 				</datalist>
 				<p class="text-sm m-3">
-					Key: <code>Open Sans Condensed:300,700:latin,greek</code>
+					Use the name of the font on google font, or use font name on your local installed font. <br/>Key: <code
+						>Open Sans Condensed:300,700:latin,greek</code
+					>
 				</p>
 				{#if isLoadingFont}
 					กำลังโหลดฟอนต์...
 				{/if}
-        <details class="text-left max-w-[200px] m-auto">
-          <summary>Fonts log</summary>
-          <ul class="font-mono max-h-20 overflow-y-auto">
-            {#each fontsStatus as {status, name}}
-            <li class="">
-              - {status}: {name}
-            </li>
-            {/each}
-          </ul>
-        </details>
+				<details class="text-left max-w-[200px] m-auto">
+					<summary>Fonts log</summary>
+					<ul class="font-mono max-h-20 overflow-y-auto">
+						{#each fontsStatus as { status, name }}
+							<li class="">
+								- {status}: {name}
+							</li>
+						{/each}
+					</ul>
+				</details>
 			</div>
 		</section>
-		<!-- <section>
-			<select data-choose-theme class="select select-sm">
-				<option value="">Default</option>
-				<option value="dark">Dark</option>
-				<option value="pink">Pink</option>
-			</select>
-		</section> -->
 	</div>
+	<footer class="text-center">
+		<p>
+			Create for using by myself, <a href="https://www.github.com/ptsgrn">ptsgrn</a>, and think it's
+			cool to share.
+		</p>
+		<select data-choose-theme class="select select-sm capitalize">
+			<option value="">Default</option>
+			{#each availableThemes as themeName}
+				<option value={themeName} class="capitalize">{themeName}</option>
+			{/each}
+		</select>
+	</footer>
 </main>
